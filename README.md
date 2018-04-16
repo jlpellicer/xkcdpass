@@ -19,11 +19,13 @@ config := xkcdpass.Config{
 	Numbers:   3,
 }
 
-password, err = xkcdpass.Generate(config)
+password, err := xkcdpass.Generate(config)
 
 if err != nil {
-	log.Printf("%s", err)
+	log.Printf("Error: %s", err)
 }
+
+log.Printf("Password: %s", password)
 ```
 
 ## Notes
