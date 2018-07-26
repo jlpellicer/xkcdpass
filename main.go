@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	static "xkcdpass/static"
+	static "github.com/jlpellicer/xkcdpass/static"
 )
 
 type Config struct {
