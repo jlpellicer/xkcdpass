@@ -4,14 +4,13 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"math"
 	"math/big"
 	mathRand "math/rand"
-	"os"
 	"strconv"
 	"strings"
+
+	static "xkcdpass/static"
 )
 
 type Config struct {
@@ -22,9 +21,8 @@ type Config struct {
 	Numbers   int
 }
 
-const filepath = "../github.com/jlpellicer/xkcdpass/static"
-
 func Generate(config Config) (string, error) {
+	var err error
 	if config.MaxLength < config.MinLength {
 		return "", errors.New("xkcdpass: MaxLength should be greater than or equal to MinLength")
 	}
@@ -32,7 +30,7 @@ func Generate(config Config) (string, error) {
 	minWordLen := 100
 	maxWordLen := 0
 	filename := getFilename(config)
-	data, err := readFile(filename)
+	data, err := static.Asset("static/" + filename)
 	if err != nil {
 		return "", errors.New("xkcdpass: failed to read file " + filename)
 	}
@@ -132,27 +130,6 @@ func getFilename(config Config) (filename string) {
 	if config.Language == "" {
 		config.Language = "en"
 	}
-	filename = fmt.Sprintf("%s/%s_words.txt", filepath, config.Language)
+	filename = fmt.Sprintf("%s_words.txt", config.Language)
 	return
-}
-
-func readFile(filepath string) (data []byte, error error) {
-	data, error = ioutil.ReadFile(filepath)
-	if error != nil {
-		return
-	}
-	return
-}
-
-func readDir(root string) {
-	file, err := os.Open(root)
-	if err != nil {
-		log.Fatalf("failed opening directory: %s", err)
-	}
-	defer file.Close()
-
-	list, _ := file.Readdirnames(0) // 0 to read all files and folders
-	for _, name := range list {
-		fmt.Println(name)
-	}
 }
